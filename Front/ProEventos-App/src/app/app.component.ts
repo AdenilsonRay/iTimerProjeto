@@ -7,7 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  public nome: any = {N1:'AAAAAAAA'};
-
   title = 'ProEventos-App';
 }

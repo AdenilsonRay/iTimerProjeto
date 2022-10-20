@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using iTime.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ProEventos.Application;
+using ProEventos.Persistence.Contextos;
+using ProEventos.Application.Contratos;
+using ProEventos.Persistence.Contratos;
+using ProEventos.Persistence;
 
 namespace iTime.API
 {
@@ -28,10 +25,21 @@ namespace iTime.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<ProEventosContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("default"))
             );
-            services.AddControllers();
+
+            //services.AddScoped<ProEventosContext, DbContext>();
+            //builder.Services.AddScoped<IOperationScoped, Operation>();
+
+            services.AddControllers()
+                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
+                     Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped<IEventosService, EventosService>();
+            services.AddScoped<IGeralPersist, GeralPersist>();
+            services.AddScoped<IEventoPersist, EventoPersist>();                        
+
             services.AddCors();
             services.AddSwaggerGen(c =>
             {
