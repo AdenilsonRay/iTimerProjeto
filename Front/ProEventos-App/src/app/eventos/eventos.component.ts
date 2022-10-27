@@ -1,25 +1,43 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+//#region Importacoes
+//import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+
+//Interno
+import { EventoService } from '../services/evento.service';
+import { Evento } from '../models/Evento';
+
+//Externo
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
   styleUrls: ['./eventos.component.scss']
+
+  //Forma de injetar um servico
+  //providers:[EventoService]
 })
+//#endregion
+
 export class EventosComponent implements OnInit {
 
-  constructor(private http:HttpClient) { }
+  //#region Variaveis
+  public modalRef: BsModalRef ;
+  public eventos: Evento[] = [];
+  public eventosFiltrados: Evento[] = [];
 
-  //**Variaveis
-  public eventos: any = [];
-  larguraImagem: number = 150;
-  margenImagem: number = 2;
-  exibirImagem: boolean = true;
-  eventosFiltrados: any = [];
+  //#endregion
 
-  //**Propriedades
+  //#region Propriedades
+  public larguraImagem: number = 150;
+  public margenImagem: number = 2;
+  public exibirImagem: boolean = true;
   private _filtroLista: string = '';
+  //#endregion
 
+  //#region Get´s Set´s
   public get filtroLista(): string {
     return this._filtroLista;
   }
@@ -27,32 +45,74 @@ export class EventosComponent implements OnInit {
     this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtraEventos(this.filtroLista): this.eventos;
   }
+  //#endregion
 
-  //**Funcoes
-  ngOnInit() {
+  //#region Contrutor - injeta o servicoEvento que esta na pasta Se
+  constructor(
+    private eventoService: EventoService,
+    private modalService: BsModalService,
+    private toastr:ToastrService,
+    private spinner: NgxSpinnerService
+    ) {};
+
+
+  //#endregion
+
+  //#region Funcoes
+  public ngOnInit(): void {
+    this.spinner.show();
     this.getEventos();
   }
 
-  filtraEventos(filtrarPor:string): any {
+  public alterarImagem():void {
+    this.exibirImagem=!this.exibirImagem;
+  }
+
+  public filtraEventos(filtrarPor:string): Evento[] {
     filtrarPor=filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
-      (evento: { tema: string; local: string;}) => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
-       evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+      (evento: { tema: string; local: string;}) =>
+        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
+        evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
       );
   }
 
   public getEventos(): void {
-      this.http.get('https://localhost:5001/api/Eventos').subscribe(
-        response => {
-          this.eventos = response
+      this.eventoService.getEventos().subscribe({
+
+        //Recebendo os dados da funcao
+        next:(_eventos: Evento[]) => {
+          this.eventos = _eventos;
           this.eventosFiltrados = this.eventos
         },
-        error => console.log(error)
-      );
+
+        //Se der algum erro
+        error:(error:any) => {
+          this.spinner.hide();
+          this.toastr.success('Eventos não carregados!.','Erro !');
+          console.log(error)
+        },
+
+        //Ocultar o spinner
+        complete:() => this.spinner.hide()
+    });
   }
 
-  public alterarImagem(){
-    this.exibirImagem=!this.exibirImagem;
+  public openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
+  public confirm(): void {
+    this.modalRef.hide();
+    this.toastr.success('O Evento foi deletado com sucesso.','Deletado!');
+  }
+  public decline(): void {
+    this.modalRef.hide();
+  }
+
+  public showSuccess(){
+    this.toastr.success('Hello word!','Toastr fun!');
+  }
+
+  //#endregion
 }
 
