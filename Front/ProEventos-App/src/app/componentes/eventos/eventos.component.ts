@@ -3,8 +3,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 
 //Interno
-import { EventoService } from '../services/evento.service';
-import { Evento } from '../models/Evento';
+import { EventoService } from '../../services/evento.service';
+import { Evento } from '../../models/Evento';
 
 //Externo
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';

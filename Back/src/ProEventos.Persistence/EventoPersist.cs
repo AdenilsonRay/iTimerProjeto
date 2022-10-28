@@ -59,12 +59,12 @@ namespace ProEventos.Persistence
             if (includePalestrantes)
             {
                 query = query
-                    .AsNoTracking()
                     .Include(e => e.PalestrantesEventos)
                     .ThenInclude(pe => pe.Palestrante);
             }
 
             query = query
+                .AsNoTracking()
                 .OrderBy(e => e.Id)
                 .Where(e => e.Id == EventoId);
 
