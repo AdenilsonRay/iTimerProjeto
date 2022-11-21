@@ -1,16 +1,16 @@
 //#region Importacoes
+import { Component, OnInit } from '@angular/core';
+
 //import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, TemplateRef } from '@angular/core';
 
 //Interno
-import { EventoService } from '../../services/evento.service';
-import { Evento } from '../../models/Evento';
+//import { EventoService } from '@app/services/evento.service';
+//import { Evento } from '@app/models/Evento';
 
 //Externo
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
-
+//import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+//import { ToastrService } from 'ngx-toastr';
+//import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
@@ -26,7 +26,8 @@ export class EventosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
   }
+
+
 }
 
