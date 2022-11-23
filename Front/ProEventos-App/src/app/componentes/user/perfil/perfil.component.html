@@ -178,7 +178,7 @@
 
     <div class="card-footer">
       <div class="d-flex">
-        <button class="btn btn-outline-secondary mr-auto border">
+        <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm($event)">
           Cancelar Alteração
         </button>
         <button [disabled]="!form.valid" class="btn btn-success">

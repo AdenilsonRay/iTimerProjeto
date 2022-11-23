@@ -44,4 +44,9 @@ export class PerfilComponent implements OnInit {
     return this.form.controls;
   }
 
+  public resetForm(event: any): void {3
+    event.preventDefault(); //Nao atualize a tela
+    this.form.reset();
+  }
+
 }

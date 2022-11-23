@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ProEventos.Domain;
+//using ProEventos.Domain;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Contratos;
+//using iTime.API.Dtos;
+using System.Collections.Generic;
+using ProEventos.Application.Dtos;
 
 namespace iTime.API.Controllers
 {
@@ -23,7 +26,9 @@ namespace iTime.API.Controllers
             try
             {
                 var eventos = await eventoService.GetAllEventosAsync(false);
-                if (eventos == null) return NotFound("Nenhum evento encontrado.");
+                if (eventos == null) return NoContent();
+
+                var eventoRetorno = new List<EventoDto>();
 
                 return Ok(eventos);
             }
@@ -39,8 +44,8 @@ namespace iTime.API.Controllers
         { 
             try
             {
-                var evento = await eventoService.GetEventoByIdAsync(EventoId:id);
-                if (evento == null) return NotFound("Nenhum evento encontrado.");
+                var evento = await eventoService.GetEventoByIdAsync(EventoId:id, true);
+                if (evento == null) return NoContent();
                 return Ok(evento);  
             }
             catch (Exception ex)
@@ -56,7 +61,7 @@ namespace iTime.API.Controllers
             try
             {
                 var eventos = await eventoService.GetAllEventosByTemaAsync(tema:tema);
-                if (eventos == null) return NotFound("Nenhum evento por tema encontrado.");
+                if (eventos == null) return NoContent();
                 return Ok(eventos);  
             }
             catch (Exception ex)
@@ -69,12 +74,12 @@ namespace iTime.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento model)
+        public async Task<IActionResult> Post(EventoDto model)
         { 
             try
             {
                 var evento = await eventoService.AddEventos(model);
-                if (evento == null) return BadRequest("Erro ao tentar adicionar evento.");
+                if (evento == null) return NoContent();
                 return Ok(evento);  
             }
             catch (Exception ex)
@@ -85,12 +90,12 @@ namespace iTime.API.Controllers
         }
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Evento model)
+        public async Task<IActionResult> Put(int id, EventoDto model)
         { 
             try
             {
                 var evento = await eventoService.UpDateEvento(id,model);
-                if (evento == null) return BadRequest("Erro ao tentar alterar evento.");
+                if (evento == null) return NoContent();
                 return Ok(evento);  
             }
             catch (Exception ex)
@@ -105,16 +110,18 @@ namespace iTime.API.Controllers
         { 
             try
             {
-                if (!await eventoService.DeleteEvents(id)) return BadRequest("Erro ao tentar deletar evento.");
-                return Ok("Evento deletado");  
+                var evento = await eventoService.GetEventoByIdAsync(EventoId:id, true);
+                if (evento == null) return NoContent();
+
+                return await eventoService.DeleteEvents(id)? 
+                Ok("Evento deletado") :
+                throw new ("Ocorreu um problema não especifico ao tentar deletar Evento.");  
             }
             catch (Exception ex)
             {
                 return this.StatusCode(500,
                 $"Erro ao tentar deletar evento. Erro:{ex.Message}");
             }
-        }   
-        
-             
+        }     
     }
 }

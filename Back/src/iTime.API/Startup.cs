@@ -10,6 +10,8 @@ using ProEventos.Persistence.Contextos;
 using ProEventos.Application.Contratos;
 using ProEventos.Persistence.Contratos;
 using ProEventos.Persistence;
+using AutoMapper;
+using System;
 
 namespace iTime.API
 {
@@ -35,6 +37,9 @@ namespace iTime.API
             services.AddControllers()
                     .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
                      Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //Estou configurando para o services mapear o app procurando a class que herda "Profile do AtuoMapp"
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IEventosService, EventosService>();
             services.AddScoped<IGeralPersist, GeralPersist>();
