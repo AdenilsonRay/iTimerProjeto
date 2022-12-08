@@ -13,6 +13,8 @@ namespace ProEventos.Persistence
     public class EventoPersist : IEventoPersist
     {
         private readonly ProEventosContext _context;
+
+        
         public EventoPersist(ProEventosContext context)
         {
             _context = context;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-//using ProEventos.Domain;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Contratos;
-//using iTime.API.Dtos;
 using System.Collections.Generic;
 using ProEventos.Application.Dtos;
 
@@ -19,6 +17,8 @@ namespace iTime.API.Controllers
         {
             this.eventoService = ieventoService;
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -73,6 +73,7 @@ namespace iTime.API.Controllers
 
 
 
+
         [HttpPost]
         public async Task<IActionResult> Post(EventoDto model)
         { 
@@ -113,9 +114,9 @@ namespace iTime.API.Controllers
                 var evento = await eventoService.GetEventoByIdAsync(EventoId:id, true);
                 if (evento == null) return NoContent();
 
-                return await eventoService.DeleteEvents(id)? 
-                Ok("Evento deletado") :
-                throw new ("Ocorreu um problema não especifico ao tentar deletar Evento.");  
+                return await eventoService.DeleteEvents(id)
+                ? Ok(new {message = "Deletado"}) 
+                : throw new ("Ocorreu um problema não especifico ao tentar deletar Evento.");  
             }
             catch (Exception ex)
             {

@@ -89,20 +89,19 @@ namespace ProEventos.Application
 
         public async Task<bool> DeleteEvents(int eventoId)
         {
-            return true;
-            // try
-            // {
-            //     var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
-            //     if (evento == null) throw new Exception("Evento para delete nao encontrado.");
+            try
+            {
+                var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
+                if (evento == null) throw new Exception("Evento para delete nao encontrado.");
 
-            //     _geralPersiste.Delete<EventoDtos>(evento);
+                _geralPersiste.Delete<Evento>(evento);
 
-            //     return await _geralPersiste.SaveChangesAsync();
-            // }
-            // catch (Exception ex)
-            // {
-            //     throw new Exception(ex.Message);
-            // }
+                return await _geralPersiste.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         #endregion
 
@@ -161,6 +160,29 @@ namespace ProEventos.Application
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task GetEventoPost(int eventoId, bool includePalestrantes = false)
+        {
+            try
+            {
+                //Recebendo pelas tabelas do Domain
+                var eventos = await _eventoPersist.GetEventoByIdAsync(eventoId, includePalestrantes);
+                //if (eventos == null) return null;
+
+                //Passando do uso do Domain para as tabelas do Dtos mapeadas
+                //var resultado = _mapper.Map<EventoDto>(eventos);
+
+                //return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+
+
+
         #endregion
     }
 }

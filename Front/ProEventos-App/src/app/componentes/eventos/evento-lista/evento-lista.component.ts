@@ -17,6 +17,7 @@ export class EventoListaComponent implements OnInit {
   public modalRef: BsModalRef ;
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
+  public eventoId:number;
 
   //#endregion
 
@@ -52,7 +53,7 @@ export class EventoListaComponent implements OnInit {
   //#region Funcoes
   public ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
+    this.carregarEventos();
   }
 
   public alterarImagem():void {
@@ -68,7 +69,7 @@ export class EventoListaComponent implements OnInit {
       );
   }
 
-  public getEventos(): void {
+  public carregarEventos(): void {
       this.eventoService.getEventos().subscribe({
 
         //Recebendo os dados da funcao
@@ -89,13 +90,50 @@ export class EventoListaComponent implements OnInit {
     });
   }
 
-  public openModal(template: TemplateRef<any>) {
+  public openModal(event: any, template: TemplateRef<any>, eventoId:number) {
+    event.stopPropagation();
+    this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
+
   public confirm(): void {
+
     this.modalRef.hide();
-    this.toastr.success('O Evento foi deletado com sucesso.','Deletado!');
+
+    //Exibe o spinner
+    this.spinner.show();
+
+    //O componente chama o servico passa e retorna algo
+    this.eventoService.deleteEvento(this.eventoId).subscribe({
+
+      //Recebe o retorno
+      next: (result:any) => {
+
+        //Pasando o recebido para o console da pagina
+        console.log(result);
+
+        //Informa no toast o sucesso da chamada
+        this.toastr.success('O Evento foi deletado com sucesso.','Deletado');
+
+        //Carrega lista de eventos
+        this.carregarEventos();
+      },
+
+      //Se retornar erros em vez de acerto receber em 'error'
+      error: (error: any) => {
+
+        //Exibe no console da pagina
+        console.error(error);
+
+        //Informa no toast
+        this.toastr.success('Erro ao tentar deletar o evento ${this.eventoId}','Erro');
+      },
+
+      //Este substitui o mesmo em cada momento acima e o 'Complete:' por so ter ele.
+    }).add(() => this.spinner.hide());
+
   }
+
   public decline(): void {
     this.modalRef.hide();
   }

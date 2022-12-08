@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-
-import { ContatosComponent } from './componentes/contatos/contatos.component';
 import { DashboardComponent } from './componentes/dashboard/dashboard.component';
 import { PalestrantesComponent } from './componentes/palestrantes/palestrantes.component';
 
@@ -15,30 +13,33 @@ import { LoginComponent } from './componentes/user/login/login.component';
 import { RegistrationComponent } from './componentes/user/registration/registration.component';
 import { PerfilComponent } from './componentes/user/perfil/perfil.component';
 
-
- /*  {path:'eventos',redirectTo:'eventos'}, */
+import { ContatosComponent } from './componentes/contatos/contatos.component';
 
 const routes: Routes = [
+  {path:'eventos',redirectTo:'eventos/lista'},
+
   {path:'user', component:UserComponent,
     children:[
       {path:'login', component:LoginComponent},
       {path:'registration', component:RegistrationComponent}
     ]
   },
+
   {path:'user/perfil', component:PerfilComponent},
-  {
-    path:'eventos', component:EventosComponent,
+
+  {path:'eventos', component:EventosComponent,
     children: [
       { path:'detalhe/:id', component:EventoDetalheComponent },
       { path:'detalhe', component:EventoDetalheComponent },
       { path:'lista', component:EventoListaComponent },
     ]
   },
+
   {path:'dashboard', component:DashboardComponent},
   {path:'contatos', component:ContatosComponent},
   {path:'palestrantes', component:PalestrantesComponent},
   {path:'eventos/lista', component:EventoListaComponent },
-  {path:'eventos-detalhe', component:EventoDetalheComponent },
+  {path:'eventos/detalhe', component:EventoDetalheComponent },
   {path: '', redirectTo:'dashboard', pathMatch:'full'},
   {path: '**', redirectTo:'dashboard', pathMatch:'full'}
 ];
