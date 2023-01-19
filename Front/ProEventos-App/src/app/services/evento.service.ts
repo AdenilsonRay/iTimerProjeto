@@ -17,16 +17,14 @@ export class EventoService {
 
 constructor(private http:HttpClient) { }
 
+//O 'take(1)' obriga a funcao ser finalizada apos usada uma vez.
 public getCep(cep: string): any {
   return this.http.get(`${'https://cdn.apicep.com/file/apicep/'}${cep}.json`).pipe(take(1));
  }
 
 
-
  public getEventos(): Observable<Evento[]>{
-  return this.http
-    .get<Evento[]>('https://localhost:5001/api/Eventos')
-    .pipe(take(1)); //Desescrever o observable remover da memoria descarregar.
+  return this.http.get<Evento[]>('https://localhost:5001/api/Eventos').pipe(take(1)); //Desescrever o observable remover da memoria descarregar.
  }
 
  public getEventosByTema(tema: string): Observable<Evento[]>{
@@ -34,7 +32,7 @@ public getCep(cep: string): any {
  }
 
  public getEventoById(id: number): Observable<Evento>{
-  return this.http.get<Evento>(`${'https://localhost:5001/api/Eventos'}/${id}/tema`).pipe(take(1));
+  return this.http.get<Evento>(`${'https://localhost:5001/api/Eventos'}/${id}`).pipe(take(1));
  }
 
 
@@ -46,11 +44,11 @@ public getCep(cep: string): any {
  }
 
  public put(evento:Evento): Observable<Evento>{
-  return this.http.put<Evento>(`this.baseURL/${evento.id}`, evento).pipe(take(1));
+  return this.http.put<Evento>(`${this.baseURL}/${evento.id}`, evento).pipe(take(1));
  }
 
  public deleteEvento(id:number): Observable<any>{
-  return this.http.delete<string>(`${'https://localhost:5001/api/Eventos'}/${id}`).pipe(take(1));
+  return this.http.delete<any>(`${'https://localhost:5001/api/Eventos'}/${id}`).pipe(take(1));
  }
 
 }

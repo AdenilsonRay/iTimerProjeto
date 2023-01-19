@@ -12,8 +12,8 @@ namespace iTime.API.Controllers
     [Route("api/[controller]")]
     public class EventosController : ControllerBase
     {
-        private readonly IEventosService eventoService;
-        public EventosController(IEventosService ieventoService)
+        private readonly IEventoService eventoService;
+        public EventosController(IEventoService ieventoService)
         {
             this.eventoService = ieventoService;
         }
@@ -75,7 +75,7 @@ namespace iTime.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(EventoDto model)
+        public async Task<IActionResult> post(EventoDto model)
         { 
             try
             {
@@ -91,7 +91,7 @@ namespace iTime.API.Controllers
         }
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, EventoDto model)
+        public async Task<IActionResult> put(int id, EventoDto model)
         { 
             try
             {
@@ -107,14 +107,16 @@ namespace iTime.API.Controllers
         }
 
       [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> delete(int id)
         { 
             try
             {
+                //Verifica se o item existe. Se map existe retorna nullo
                 var evento = await eventoService.GetEventoByIdAsync(EventoId:id, true);
                 if (evento == null) return NoContent();
 
-                return await eventoService.DeleteEvents(id)
+                //Existindo execulta a acao e retorna um objeto confirmando se nao o ERRO.
+                return await eventoService.DeleteEvento(id)
                 ? Ok(new {message = "Deletado"}) 
                 : throw new ("Ocorreu um problema não especifico ao tentar deletar Evento.");  
             }

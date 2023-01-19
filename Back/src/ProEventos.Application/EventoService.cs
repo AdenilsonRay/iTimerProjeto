@@ -9,7 +9,7 @@ using ProEventos.Persistence.Contratos;
 
 namespace ProEventos.Application
 {
-    public class EventosService : IEventosService
+    public class EventoService : IEventoService
     {
         #region Variavel local
 
@@ -20,7 +20,7 @@ namespace ProEventos.Application
         #endregion
         
         #region Construtor
-        public  EventosService(IGeralPersist geralPersiste, 
+        public  EventoService(IGeralPersist geralPersiste, 
                                IEventoPersist eventoPersist,
                                IMapper mapper)
         {
@@ -31,6 +31,7 @@ namespace ProEventos.Application
         #endregion
 
         #region Add-Update-Delete
+        
         //Entra Dto executa ma persistencia Domain e retorna Dto
         public async Task<EventoDto> AddEventos(EventoDto model)
         {
@@ -39,13 +40,13 @@ namespace ProEventos.Application
                 //Mapeado o Dto que chega para domain
                 var evento = _mapper.Map<Evento>(model);
 
-                //Adicionando
+                //Preparando para adicionar no banco
                 _geralPersiste.Add<Evento>(evento);
 
-                //Salvando tudo corretamente
+                //Salvando o que foi preparado no banco se realizado
                 if (await _geralPersiste.SaveChangesAsync())
                 {
-                    //Recebendo o retorno em Domain
+                    //Recuperando o evento registrado retornando em Domain
                     var retorno =await _eventoPersist.GetEventoByIdAsync(evento.Id, false); 
                     
                     //Mapeado de Domaind para Dto e retornando
@@ -87,15 +88,18 @@ namespace ProEventos.Application
              }
         }   
 
-        public async Task<bool> DeleteEvents(int eventoId)
+        public async Task<bool> DeleteEvento(int eventoId)
         {
             try
             {
+                //Verifica se o item existe. Se nao retorna o ERRO.
                 var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
                 if (evento == null) throw new Exception("Evento para delete nao encontrado.");
 
+                //Deleta o item
                 _geralPersiste.Delete<Evento>(evento);
 
+                //Confirma a delecao
                 return await _geralPersiste.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -180,9 +184,6 @@ namespace ProEventos.Application
             }
         }
         
-
-
-
         #endregion
     }
 }

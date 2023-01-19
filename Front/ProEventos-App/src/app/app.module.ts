@@ -23,9 +23,12 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './shared/nav/nav.component';
-import { EventoService } from './services/evento.service';
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { TituloComponent } from './shared/titulo/titulo.component';
+
+import { EventoService } from './services/evento.service';
+import { LoteService } from './services/lote.service';
+
 
 import { EventosComponent } from './componentes/eventos/eventos.component';
 import { PalestrantesComponent } from './componentes/palestrantes/palestrantes.component';
@@ -38,6 +41,7 @@ import { EventoListaComponent } from './componentes/eventos/evento-lista/evento-
 import { UserComponent } from './componentes/user/user.component';
 import { LoginComponent } from './componentes/user/login/login.component';
 import { RegistrationComponent } from './componentes/user/registration/registration.component';
+
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -80,7 +84,8 @@ defineLocale('pt-br', ptBrLocale);
     ],
     schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    EventoService
+    EventoService,
+    LoteService
     ],
   bootstrap: [AppComponent]
 })

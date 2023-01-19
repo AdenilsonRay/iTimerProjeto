@@ -98,6 +98,7 @@ export class EventoListaComponent implements OnInit {
 
   public confirm(): void {
 
+    //Exibir tela de confirmacao
     this.modalRef.hide();
 
     //Exibe o spinner
@@ -109,14 +110,21 @@ export class EventoListaComponent implements OnInit {
       //Recebe o retorno
       next: (result:any) => {
 
-        //Pasando o recebido para o console da pagina
-        console.log(result);
+        if (result.message === 'Deletado') {
 
         //Informa no toast o sucesso da chamada
         this.toastr.success('O Evento foi deletado com sucesso.','Deletado');
 
+        //Remover o spinner
+        //this.spinner.hide();
+
         //Carrega lista de eventos
         this.carregarEventos();
+
+        /*         //Pasando o recebido para o console da pagina
+        console.log(result); */
+
+        }
       },
 
       //Se retornar erros em vez de acerto receber em 'error'

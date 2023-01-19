@@ -28,7 +28,7 @@ namespace iTime.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ProEventosContext>(
-                context => context.UseSqlite(Configuration.GetConnectionString("default"))
+                context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
 
             //services.AddScoped<ProEventosContext, DbContext>();
@@ -41,9 +41,13 @@ namespace iTime.API
             //Estou configurando para o services mapear o app procurando a class que herda "Profile do AtuoMapp"
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<IEventosService, EventosService>();
-            services.AddScoped<IGeralPersist, GeralPersist>();
+            services.AddScoped<ILoteService, LoteService>();
+            services.AddScoped<IEventoService, EventoService>();
+
+            services.AddScoped<IGeralPersist, GeralPersist>();            
+
             services.AddScoped<IEventoPersist, EventoPersist>();                        
+            services.AddScoped<ILotePersist, LotePersist>();
 
             services.AddCors();
             services.AddSwaggerGen(c =>
