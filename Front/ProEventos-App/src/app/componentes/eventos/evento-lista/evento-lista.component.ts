@@ -18,7 +18,6 @@ export class EventoListaComponent implements OnInit {
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
   public eventoId:number;
-
   //#endregion
 
   //#region Propriedades
@@ -70,8 +69,7 @@ export class EventoListaComponent implements OnInit {
   }
 
   public carregarEventos(): void {
-      this.eventoService.getEventos().subscribe({
-
+        this.eventoService.getEventos().subscribe({
         //Recebendo os dados da funcao
         next:(_eventos: Evento[]) => {
           this.eventos = _eventos;
@@ -82,12 +80,13 @@ export class EventoListaComponent implements OnInit {
         error:(error:any) => {
           this.spinner.hide();
           this.toastr.success('Eventos não carregados!.','Erro !');
-          console.log(error)
+          console.log(error);
         },
 
         //Ocultar o spinner
         complete:() => this.spinner.hide()
     });
+    this.spinner.hide()
   }
 
   public openModal(event: any, template: TemplateRef<any>, eventoId:number) {

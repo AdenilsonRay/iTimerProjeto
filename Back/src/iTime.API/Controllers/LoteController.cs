@@ -12,11 +12,11 @@ namespace iTime.API.Controllers
     [Route("api/[controller]")]
     public class LoteController : ControllerBase
     {
-        private readonly ILoteService loteService;
+        private readonly ILoteService _loteService;
 
-        public LoteController(ILoteService iLoteService)
+        public LoteController(ILoteService LoteService)
         {
-            this.loteService = iLoteService;
+            this._loteService = LoteService;
         }
 
 
@@ -26,7 +26,7 @@ namespace iTime.API.Controllers
         { 
             try
             {
-                var lotes = await loteService.GetLotesByEventoIdAsync(eventoId);
+                var lotes = await _loteService.GetLotesByEventoIdAsync(eventoId);
                 if (lotes == null) return NoContent();
 
                 var eventoRetorno = new List<EventoDto>();
@@ -45,7 +45,7 @@ namespace iTime.API.Controllers
         { 
             try
             {
-                var lotes = await loteService.SaveLotes(eventoId,models);
+                var lotes = await _loteService.SaveLotes(eventoId,models);
                 if (lotes == null) return NoContent();
                 return Ok(lotes);  
             }
@@ -61,10 +61,10 @@ namespace iTime.API.Controllers
         { 
             try
             {
-                var lote = await loteService.GetLoteByIdsAsync(eventoId, loteId);
+                var lote = await _loteService.GetLoteByIdsAsync(eventoId, loteId);
                 if (lote == null) return NoContent();
 
-                return await loteService.DeleteLote(lote.EventoId, lote.Id)
+                return await _loteService.DeleteLote(lote.EventoId, lote.Id)
                 ? Ok(new {message = "Lote Deletado"}) 
                 : throw new ("Ocorreu um problema não especifico ao tentar deletar o lote.");  
             }

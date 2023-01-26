@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Evento } from '@app/models/Evento';
 import { Lote } from '@app/models/Lote';
@@ -38,6 +38,7 @@ export class EventoDetalheComponent implements OnInit {
     private eventoService: EventoService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService
+    //private router:Router
   ) {
     this.localeService.use('pt-br');
   }
@@ -114,10 +115,9 @@ export class EventoDetalheComponent implements OnInit {
     });
   }
 
-get modoEditar(): boolean{
-  return this.estadoSalvar === 'put';
-}
-
+  get modoEditar(): boolean{
+   return this.estadoSalvar === 'put';
+  }
 
   //Obtendo e retornando a lista atualizada dos lotes da tela como um array de form
   get lotes(): FormArray {
@@ -132,7 +132,6 @@ get modoEditar(): boolean{
     // e os demais itens vao com seu valor padrao da class desse item
     this.lotes.push(this.criarLote({id:0} as Lote));
   }
-
 
   //Esta funcao retorna um tipo especifico
   //vai receber uma estrutura Lote vazio"
@@ -149,7 +148,6 @@ get modoEditar(): boolean{
       dataFim:[lote.dataFim]
     });
   }
-
 
   //Chamando o grupo de campos
   get f(): any {
@@ -198,7 +196,10 @@ get modoEditar(): boolean{
       //Esta chamando a funcao pelo nome "['post']" em vez de chamar pelo tradicional '.post' no lugar do PONTO '.' coloca o [NOME]
       this.eventoService[this.estadoSalvar](this.evento).subscribe(
         //NEXT - Se todo Ok informa ao usuario
-        () => this.toastr.success('Evento salvo com sucesso!', 'Sucesso!'),
+        (eventoRetorno: Evento) =>
+          this.toastr.success('Evento salvo com sucesso!', 'Sucesso!'),
+          //this.router.navigate([`eventos/detalhe/${eventoRetorno.id}`]);
+
 
         //ERROR - Se algm erro informa no console da pagina e informa o usuario
         (error: any) => {

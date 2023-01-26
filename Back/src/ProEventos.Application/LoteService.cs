@@ -34,12 +34,12 @@ namespace ProEventos.Application
 
         #region Add-Update-Delete
 
-        public async Task AddLote(int eventoId,LoteDto model)
+        public async Task AddLote(int eventoId,LoteDto modelDto)
         {
             try
             {
                 //Mapeado o Dto que chega para domain
-                var loteDomain = _mapper.Map<Lote>(model);
+                var loteDomain = _mapper.Map<Lote>(modelDto);
 
                 //Defini de que evento pertence esse lote
                 loteDomain.EventoId = eventoId;
@@ -83,7 +83,7 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<LoteDto[]> SaveLotes(int eventoId, LoteDto[] models)
+        public async Task<LoteDto[]> SaveLotes(int eventoId, LoteDto[] modelsDto)
         {
             try
             {
@@ -94,23 +94,23 @@ namespace ProEventos.Application
                 if (lotesBancoDomain == null) return null;
 
                 //Percorrer os lotes recebidos
-                foreach (var model in models)
+                foreach (var modelDto in modelsDto)
                 {
                     //Se novos lotes incluidos. Adicionar ao banco 
-                    if (model.Id == 0)    
+                    if (modelDto.Id == 0)    
                     {                
-                        await AddLote(eventoId,model);
+                        await AddLote(eventoId,modelDto);
                     }
                     else //Se lotes alterados. Alterar no banco
                     {
                         //Recupera da lista do banco o mesmo item sendo analizado
-                        var loteCorrenteDomain = lotesBancoDomain.FirstOrDefault(lote => lote.Id == model.Id);
+                        var loteCorrenteDomain = lotesBancoDomain.FirstOrDefault(lote => lote.Id == modelDto.Id);
 
                         //Definindo o id ja cadastrado do lote alterado
-                        model.Id = loteCorrenteDomain.Id;
+                        modelDto.Id = loteCorrenteDomain.Id;
 
                         //Model passara seua valores para o loteCorrenteDomain(Dto p/ Domain)
-                        _mapper.Map(model, loteCorrenteDomain);
+                        _mapper.Map(modelDto, loteCorrenteDomain);
 
                         //Realiza atualizacao do lote corrente
                         _geralPersiste.Update<Lote>(loteCorrenteDomain);
@@ -131,7 +131,7 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<bool> DeleteLote(int loteId, int eventoId)
+        public async Task<bool> DeleteLote(int eventoId, int loteId)
         {
             try
             {

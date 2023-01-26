@@ -14,11 +14,11 @@ export class EventoService {
   //Variaveis globais
   baseURL = 'https://localhost:5001/api/Eventos';
   cepURL = 'https://cdn.apicep.com/file/apicep';
-
+  public eventos: Evento[] = [];
 constructor(private http:HttpClient) { }
 
 //O 'take(1)' obriga a funcao ser finalizada apos usada uma vez.
-public getCep(cep: string): any {
+ public getCep(cep: string): any {
   return this.http.get(`${'https://cdn.apicep.com/file/apicep/'}${cep}.json`).pipe(take(1));
  }
 

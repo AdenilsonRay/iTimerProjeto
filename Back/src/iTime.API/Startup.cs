@@ -41,9 +41,12 @@ namespace iTime.API
             //Estou configurando para o services mapear o app procurando a class que herda "Profile do AtuoMapp"
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            //Services
             services.AddScoped<ILoteService, LoteService>();
             services.AddScoped<IEventoService, EventoService>();
 
+
+            //Persistencias
             services.AddScoped<IGeralPersist, GeralPersist>();            
 
             services.AddScoped<IEventoPersist, EventoPersist>();                        
